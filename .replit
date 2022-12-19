@@ -9,13 +9,12 @@ channel = "stable-22_05"
 
 [env]
 VIRTUAL_ENV = "/home/runner/${REPL_SLUG}/venv"
-PATH = "${VIRTUAL_ENV}/bin"
 PYTHONPATH = "${VIRTUAL_ENV}/lib/python3.8/site-packages"
 REPLIT_POETRY_PYPI_REPOSITORY = "https://package-proxy.replit.com/pypi/"
 MPLBACKEND = "TkAgg"
 POETRY_CACHE_DIR = "${HOME}/${REPL_SLUG}/.cache/pypoetry"
 XDG_CONFIG_HOME = "/home/runner/.config"
-PATH = "/home/runner/$REPL_SLUG/.config/npm/node_global/bin:/home/runner/$REPL_SLUG/node_modules/.bin:${VIRTUAL_ENV}/lib/python3.8/site-packages"
+PATH = "/home/runner/$REPL_SLUG/.config/npm/node_global/bin:/home/runner/$REPL_SLUG/node_modules/.bin:${VIRTUAL_ENV}/lib/python3.8/site-packages:${VIRTUAL_ENV}/bin"
 npm_config_prefix = "/home/runner/$REPL_SLUG/.config/npm/node_global"
 
 [unitTest]
