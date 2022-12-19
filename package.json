@@ -1,19 +1,21 @@
 {
   "main": "index.js",
   "dependencies": {
-    "@pact-foundation/pact": "10.1.4",
+    "@pact-foundation/pact": "10.4.0",
     "@pact-foundation/pact-node": "^10.17.6",
-    "axios": "0.19.0",
-    "body-parser": "^1.19.0",
-    "chai": "^4.2.0",
+    "axios": "1.2.1",
+    "body-parser": "^1.20.1",
+    "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
     "cors": "^2.8.5",
-    "express": "^4.16.4",
-    "get-port": "5.0.0",
-    "mocha": "^6.2.0",
-    "superagent": "^5.1.0"
+    "express": "^4.18.2",
+    "get-port": "5.1.1",
+    "mocha": "^10.2.0",
+    "superagent": "^8.0.6"
   },
   "scripts": {
+    "test": "npm run test:consumer && ./publish.sh && npm run test:provider",
+    "pretest": "npm install",
     "test:consumer": "node runConsumerTest.js",
     "test:provider": "node runProviderTest.js",
     "pact:publish": "./publish.sh"

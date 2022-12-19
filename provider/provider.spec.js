@@ -7,6 +7,7 @@ const { providerName, pactFile } = require("../pact.js");
 chai.use(chaiAsPromised);
 let port;
 let opts;
+let app;
 
 // Verify that the provider meets all consumer expectations
 describe("Pact Verification", () => {
@@ -24,13 +25,19 @@ describe("Pact Verification", () => {
       providerVersion: process.env.GIT_COMMIT ?? "1.0." + process.env.HOSTNAME,
       consumerVersionSelectors: [
         { mainBranch: true },
-        { deployedOrReleased: true },
-      ],
+        { deployedOrReleased: true }
+      ]
     };
 
-    server.listen(port, () => {
+    app = server.listen(port, () => {
       console.log(`Provider service listening on http://localhost:${port}`);
     });
+  });
+
+  after(() => {
+    if (app) {
+      app.close();
+    }
   });
   it("should validate the expectations of Order Web", () => {
     return new Verifier(opts)

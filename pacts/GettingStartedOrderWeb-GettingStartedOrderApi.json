@@ -36,7 +36,8 @@
               "combine": "AND",
               "matchers": [
                 {
-                  "match": "type"
+                  "match": "type",
+                  "min": 1
                 }
               ]
             },
@@ -44,7 +45,8 @@
               "combine": "AND",
               "matchers": [
                 {
-                  "match": "type"
+                  "match": "type",
+                  "min": 1
                 }
               ]
             }
@@ -57,11 +59,11 @@
   ],
   "metadata": {
     "pact-js": {
-      "version": "10.1.4"
+      "version": "10.4.0"
     },
     "pactRust": {
-      "ffi": "0.3.12",
-      "models": "0.4.5"
+      "ffi": "0.3.18",
+      "models": "1.0.2"
     },
     "pactSpecification": {
       "version": "3.0.0"
