@@ -11,6 +11,7 @@ server.use((_, res, next) => {
   next();
 });
 
+// "In memory" data store
 let dataStore = require("./data/orders.js");
 
 server.get("/orders", (_, res) => {

@@ -39,21 +39,25 @@ Imagine a simple model class that looks something like this \(order.js\). The at
 ```js
 class Order {
   constructor(id, items) {
-    this.id = id
-    this.items = items
+    this.id = id;
+    this.items = items;
   }
 
   total() {
     return this.items.reduce((acc, v) => {
-      acc += v.quantity * v.value
-      return acc
-    }, 0)
+      acc += v.quantity * v.value;
+      return acc;
+    }, 0);
   }
 
   toString() {
-    return `Order ${this.id}, Total: ${this.total()}`
+    return `Order ${this.id}, Total: ${this.total()}`;
   }
 }
+
+module.exports = {
+  Order,
+};
 ```
 
 <!--Sample Order-->
@@ -64,18 +68,18 @@ module.exports = [
     id: 1,
     items: [
       {
-        name: 'burger',
+        name: "burger",
         quantity: 2,
         value: 20,
       },
       {
-        name: 'coke',
+        name: "coke",
         quantity: 2,
         value: 5,
       },
     ],
   },
-]
+];
 ```
 <!--END_DOCUSAURUS_CODE_TABS-->
 
@@ -87,18 +91,27 @@ Here we have our external collaborator client. Its job is to both make the exter
 <!--orderClient.js-->
 
 ```js
+const request = require("superagent");
+const { Order } = require("./order");
+
 const fetchOrders = () => {
-  return request.get(`${API_ENDPOINT}/orders`).then(
-    res => {
-      return res.body.map((o) => {
-        return new Order(o.id, o.items)
-      })
+  return request.get(`http://localhost:${process.env.API_PORT}/orders`).then(
+    (res) => {
+      return res.body.reduce((acc, o) => {
+        acc.push(new Order(o.id, o.items));
+        return acc;
+      }, []);
     },
-    err => {
-      throw new Error(`Error from response: ${err.body}`)
+    (err) => {
+      console.log(err)
+      throw new Error(`Error from response: ${err.body}`);
     }
-  )
-}
+  );
+};
+
+module.exports = {
+  fetchOrders,
+};
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
@@ -108,60 +121,66 @@ const fetchOrders = () => {
 The following code will create a mock service on `localhost:1234` which will respond to your application's queries over HTTP as if it were the real Order API. It also creates a mock provider object which you will use to set up your expectations.
 
 ```js
-// Setup Pact
-const provider = new Pact({
-  port: 1234,
-  log: path.resolve(process.cwd(), "logs", "pact.log"),
-  dir: path.resolve(process.cwd(), "pacts"),
-  consumer: "OrderWeb",
-  provider: "OrderApi"
-});
+// Setting up our test framework
+const chai = require("chai");
+const expect = chai.expect;
+const chaiAsPromised = require("chai-as-promised");
+chai.use(chaiAsPromised);
 
-// Start the mock service!
-await provider.setup()
-```
+// We need Pact in order to use it in our test
+const { provider } = require("../pact");
+const { eachLike } = require("@pact-foundation/pact").MatchersV3;
 
-### 4. Write a test
+// Importing our system under test (the orderClient) and our Order model
+const { Order } = require("./order"); 
+const { fetchOrders } = require("./orderClient");
 
-<!--DOCUSAURUS_CODE_TABS-->
-<!-- order.spec.js -->
-```js
-describe('Pact with Order API', () => {
-  describe('given there are orders', () => {
-    describe('when a call to the API is made', () => {
+// This is where we start writing our test
+describe("Pact with Order API", () => {
+  describe("given there are orders", () => {
+    const itemProperties = {
+      name: "burger",
+      quantity: 2,
+      value: 100,
+    };
+
+    const orderProperties = {
+      id: 1,
+      items: eachLike(itemProperties),
+    };
+
+    describe("when a call to the API is made", () => {
       before(() => {
-        return provider.addInteraction({
-          state: 'there are orders',
-          uponReceiving: 'a request for orders',
-          withRequest: {
-            path: '/orders',
-            method: 'GET',
-          },
-          willRespondWith: {
-            body: eachLike({
-              id: 1,
-              items: eachLike({
-                name: 'burger',
-                quantity: 2,
-                value: 100,
-              }),
-            }),
+        provider
+          .given("there are orders")
+          .uponReceiving("a request for orders")
+          .withRequest({
+            method: "GET",
+            path: "/orders",
+          })
+          .willRespondWith({
+            body: eachLike(orderProperties),
             status: 200,
             headers: {
-              'Content-Type': 'application/json; charset=utf-8',
+              "Content-Type": "application/json; charset=utf-8",
             },
-          },
-        })
-      })
+          });
+      });
 
-      it('will receive the list of current orders', () => {
-        return expect(fetchOrders()).to.eventually.have.deep.members([
-          new Order(orderProperties.id, [itemProperties]),
-        ])
-      })
-    })
-  })
-})
+      it("will receive the list of current orders", () => {
+        return provider.executeTest((mockserver) => {
+          // The mock server is started on a randomly available port,
+          // so we set the API mock service port so HTTP clients
+          // can dynamically find the endpoint
+          process.env.API_PORT = mockserver.port;
+          return expect(fetchOrders()).to.eventually.have.deep.members([
+            new Order(orderProperties.id, [itemProperties]),
+          ]);
+        });
+      });
+    });
+  });
+});
 ```
 <!--END_DOCUSAURUS_CODE_TABS-->
 
@@ -222,30 +241,30 @@ Below we have created a simple API using [Express JS](https://expressjs.com).
 <!-- orderApi.js -->
 
 ```js
-const express = require('express')
-const cors = require('cors')
-const bodyParser = require('body-parser')
-const server = express()
+const express = require("express");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const server = express();
 
-server.use(cors())
-server.use(bodyParser.json())
-server.use(bodyParser.urlencoded({ extended: true }))
+server.use(cors());
+server.use(bodyParser.json());
+server.use(bodyParser.urlencoded({ extended: true }));
 server.use((_, res, next) => {
-  res.header('Content-Type', 'application/json; charset=utf-8')
-  next()
-})
+  res.header("Content-Type", "application/json; charset=utf-8");
+  next();
+});
 
 // "In memory" data store
-let dataStore = require('./data/orders.js')
+let dataStore = require("./data/orders.js");
 
-server.get('/orders', (_, res) => {
-  res.json(dataStore)
-})
+server.get("/orders", (_, res) => {
+  res.json(dataStore);
+});
 
 module.exports = {
   server,
   dataStore,
-}
+};
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
@@ -262,36 +281,59 @@ We now need to perform the "provider verification" task, which involves the foll
 <!-- provider.spec.js -->
 ```js
 // Verify that the provider meets all consumer expectations
-describe('Pact Verification', () => {
-  let app
-  const port = 1234
-  const opts = {
-    provider: providerName,
-    providerBaseUrl: `http://localhost:${port}`,
-    pactBrokerUrl: 'https://test.pactflow.io/',
-    pactBrokerUsername: 'dXfltyFMgNOFZAxr8io9wJ37iUpY42M',
-    pactBrokerPassword: 'O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1',
-    publishVerificationResult: true,
-    providerVersionBranch: process.env.GIT_BRANCH ?? 'master',
-    providerVersion: process.env.GIT_COMMIT ?? '1.0.' + process.env.HOSTNAME,
-  }
+const Verifier = require("@pact-foundation/pact").Verifier;
+const chai = require("chai");
+const chaiAsPromised = require("chai-as-promised");
+const getPort = require("get-port");
+const { server } = require("./provider.js");
+const { providerName, pactFile } = require("../pact.js");
+chai.use(chaiAsPromised);
+let port;
+let opts;
+let app;
 
+// Verify that the provider meets all consumer expectations
+describe("Pact Verification", () => {
   before(async () => {
+    port = await getPort();
+    opts = {
+      provider: providerName,
+      providerBaseUrl: `http://localhost:${port}`,
+      // pactUrls: [pactFile], // if you don't use a broker
+      pactBrokerUrl: "https://test.pactflow.io",
+      pactBrokerUsername: "dXfltyFMgNOFZAxr8io9wJ37iUpY42M",
+      pactBrokerPassword: "O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
+      publishVerificationResult: false,
+      providerVersionBranch: process.env.GIT_BRANCH ?? "master",
+      providerVersion: process.env.GIT_COMMIT ?? "1.0." + process.env.HOSTNAME,
+      consumerVersionSelectors: [
+        { mainBranch: true },
+        { deployedOrReleased: true }
+      ]
+    };
+
     app = server.listen(port, () => {
-      console.log(`Provider service listening on http://localhost:${port}`)
-    })
-  })
+      console.log(`Provider service listening on http://localhost:${port}`);
+    });
+  });
 
-  after(async () => {
-    if (app){
-      app.close()
+  after(() => {
+    if (app) {
+      app.close();
     }
-  })
-
-  it('should validate the expectations of Order Web', () => {
-    return new Verifier().verifyProvider(opts)
-  })
-})
+  });
+  it("should validate the expectations of Order Web", () => {
+    return new Verifier(opts)
+      .verifyProvider()
+      .then((output) => {
+        console.log("Pact Verification Complete!");
+        console.log(output);
+      })
+      .catch((e) => {
+        console.error("Pact verification failed :(", e);
+      });
+  });
+});
 ```
 <!--END_DOCUSAURUS_CODE_TABS-->
 

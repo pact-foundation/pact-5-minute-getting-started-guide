@@ -1,12 +1,18 @@
+// Setting up our test framework
 const chai = require("chai");
-const chaiAsPromised = require("chai-as-promised");
-const { eachLike } = require("@pact-foundation/pact").MatchersV3;
-const { Order } = require("./order");
 const expect = chai.expect;
-const { fetchOrders } = require("./orderClient");
-const { provider } = require("../pact");
+const chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);
 
+// We need Pact in order to use it in our test
+const { provider } = require("../pact");
+const { eachLike } = require("@pact-foundation/pact").MatchersV3;
+
+// Importing our system under test (the orderClient) and our Order model
+const { Order } = require("./order"); 
+const { fetchOrders } = require("./orderClient");
+
+// This is where we start writing our test
 describe("Pact with Order API", () => {
   describe("given there are orders", () => {
     const itemProperties = {
