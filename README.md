@@ -1,6 +1,6 @@
 # pact-5-minute-getting-started-guide
 
-[![Run on Repl.it](https://repl.it/badge/github/you54f/pact-5-minute-getting-started-guide)](https://repl.it/github/you54f/pact-5-minute-getting-started-guide)
+[![Run on Repl.it](https://repl.it/badge/github/pact-foundation/pact-5-minute-getting-started-guide)](https://repl.it/github/pact-foundation/pact-5-minute-getting-started-guide)
 
 From zero to running Pact tests in 5 mins
 
