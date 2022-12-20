@@ -1,8 +1,10 @@
 # pact-5-minute-getting-started-guide
 
+[![Run on Repl.it](https://repl.it/badge/github/you54f/pact-5-minute-getting-started-guide)](https://repl.it/github/you54f/pact-5-minute-getting-started-guide)
+
 From zero to running Pact tests in 5 mins
 
-Provides runnable code to support the Pact 5 minute getting started guide [here])https://docs.pact.io/5-minute-getting-started-guide)
+Provides runnable code to support the Pact 5 minute getting started guide on our Website [here](https://docs.pact.io/5-minute-getting-started-guide)
 
 ## An example scenario: Order API
 

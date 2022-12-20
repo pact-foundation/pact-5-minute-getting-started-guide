@@ -14,10 +14,12 @@
     "superagent": "^8.0.6"
   },
   "scripts": {
-    "test": "npm run test:consumer && ./publish.sh && npm run test:provider",
+    "intro": "npm run test:consumer && npm run pact:show",
     "pretest": "npm install",
     "test:consumer": "node runConsumerTest.js",
     "test:provider": "node runProviderTest.js",
-    "pact:publish": "./publish.sh"
+    "pact:publish": "./publish.sh",
+    "pact:show": "cat pacts/GettingStartedOrderWeb-GettingStartedOrderApi.json | jq .",
+    "all": "npm run intro && npm run pact:publish && npm run test:provider"
   }
 }
