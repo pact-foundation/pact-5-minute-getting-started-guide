@@ -15,7 +15,7 @@
   },
   "scripts": {
     "intro": "npm run test:consumer && npm run pact:show",
-    "pretest": "npm install",
+    "preintro": "npm install",
     "test:consumer": "node runConsumerTest.js",
     "test:provider": "node runProviderTest.js",
     "pact:publish": "./publish.sh",
