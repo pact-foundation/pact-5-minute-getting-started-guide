@@ -1,10 +1,46 @@
 # pact-5-minute-getting-started-guide
 
-[![Run on Repl.it](https://repl.it/badge/github/pact-foundation/pact-5-minute-getting-started-guide)](https://repl.it/github/pact-foundation/pact-5-minute-getting-started-guide)
 
-From zero to running Pact tests in 5 mins
+> From zero to running Pact tests in 5 mins
 
 Provides runnable code to support the Pact 5 minute getting started guide on our Website [here](https://docs.pact.io/5-minute-getting-started-guide)
+
+## Ways to run
+
+> When you've picked an option, click the corresponding button
+
+1. [Fork](https://docs.github.com/en/get-started/quickstart/fork-a-repo) this repository (and [clone](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) it to your local machine)
+
+<a href="https://github.com/pact-foundation/pact-5-minute-getting-started-guide/fork">
+  <img src="https://img.shields.io/badge/fork%20this-repo-blue?logo=github">
+</a>
+
+2. Create a [new repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template) from this template (and [clone](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) it to your local machine)
+
+
+<a href="https://github.com/pact-foundation/pact-5-minute-getting-started-guide/generate">
+  <img src="https://img.shields.io/badge/use%20this-template-blue?logo=github">
+</a>
+
+3. Run it in your browser by creating a new Repl from our template.
+
+> You'll need to sign up, don't worry it is free, and you can run it from your phone, via the [repl.it mobile app](https://replit.com/mobile)
+
+[![Run on Repl.it](https://repl.it/badge/github/pact-foundation/pact-5-minute-getting-started-guide)](https://repl.it/github/pact-foundation/pact-5-minute-getting-started-guide)
+
+4. Run it in your browser by running our [Repl](https://replit.com/@pact)
+
+<a href="https://replit.com/@pact/pact-5-minute-getting-started-guide?outputonly=1&lite=true">
+  <img src="https://img.shields.io/badge/run%20in-browser-blue?logo=react">
+</a>
+
+5. See it as part of our getting started section on our website [here](https://docs.pact.io/5-minute-getting-started-guide)
+
+<a href="https://docs.pact.io/5-minute-getting-started-guide">
+  <img src="https://img.shields.io/badge/visit%20our-guide-blue?logo=react">
+</a>
+
+
 
 ## An example scenario: Order API
 
