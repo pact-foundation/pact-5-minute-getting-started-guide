@@ -263,6 +263,7 @@ We now need to perform the "provider verification" task, which involves the foll
 ```js
 // Verify that the provider meets all consumer expectations
 describe('Pact Verification', () => {
+  let app
   const port = 1234
   const opts = {
     provider: providerName,
@@ -276,9 +277,15 @@ describe('Pact Verification', () => {
   }
 
   before(async () => {
-    server.listen(port, () => {
+    app = server.listen(port, () => {
       console.log(`Provider service listening on http://localhost:${port}`)
     })
+  })
+
+  after(async () => {
+    if (app){
+      app.close()
+    }
   })
 
   it('should validate the expectations of Order Web', () => {
