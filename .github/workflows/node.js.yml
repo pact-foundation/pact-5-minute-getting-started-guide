@@ -26,7 +26,6 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm run test:consumer
-    - run: npm run pact:show
+    - run: npm run intro
     - run: npm run pact:publish
     - run: npm run test:provider
