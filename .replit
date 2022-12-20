@@ -1,4 +1,4 @@
-run = "npm run test"
+run = "bash --rcfile .bashrc"
 
 language = "nodejs"
 
