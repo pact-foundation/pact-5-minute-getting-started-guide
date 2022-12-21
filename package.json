@@ -21,6 +21,6 @@
     "pact:show": "cat pacts/GettingStartedOrderWeb-GettingStartedOrderApi.json | jq .",
     "test": "PACT_URL=$PWD/pacts/GettingStartedOrderWeb-GettingStartedOrderApi.json npm run test:consumer && npm run test:provider",
     "test:broker": "PACT_BROKER_BASE_URL=https://pactbroker.$REPL_OWNER.repl.co npm run test:consumer && npm run pact:publish && npm run test:provider",
-    "get:broker": "echo 'fork a copy of https://replit.com/@YOU54F/pactbroker and run npm test:broker when it has started'"
+    "get:broker": "echo 'fork a copy of https://replit.com/@pact/pactbroker and run npm test:broker when it has started'"
   }
 }

@@ -27,5 +27,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm run intro
-    - run: npm run pact:publish
+    - run: npm run test:consumer
+    - run: npm run pact:show
     - run: npm run test:provider
+    - run: npm run test:all
+    - run: npm run get:broker
