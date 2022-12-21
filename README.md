@@ -320,7 +320,6 @@ We now need to perform the "provider verification" task, which involves the foll
 const Verifier = require("@pact-foundation/pact").Verifier;
 const chai = require("chai");
 const chaiAsPromised = require("chai-as-promised");
-const getPort = require("get-port");
 const { server } = require("./provider.js");
 const { providerName, pactFile } = require("../pact.js");
 chai.use(chaiAsPromised);
@@ -331,7 +330,7 @@ let app;
 // Verify that the provider meets all consumer expectations
 describe("Pact Verification", () => {
   before(async () => {
-    port = await getPort();
+    port = 3000;
     opts = {
       provider: providerName,
       providerBaseUrl: `http://localhost:${port}`,

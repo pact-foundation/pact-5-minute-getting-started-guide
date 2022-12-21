@@ -1,8 +1,8 @@
 run = "bash --rcfile .bashrc"
 
-language = "nodejs"
+language = "python"
 
-hidden = ["node_modules", ".github/**"]
+hidden = ["node_modules", ".github/**",'.git/**','.config/**','pact_broker/**']
 
 [nix]
 channel = "stable-22_05"
