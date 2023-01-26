@@ -243,13 +243,13 @@ Now that you have created and run your consumer tests, producing a contract \(th
 
 For this purpose, we are going to use a hosted Pact Broker from pactflow.io.
 
-> The Pact Broker is an open source tool that requires you to deploy, administer and host it yourself. If you would prefer a plug-and-play option, we've created [Pactflow](https://pactflow.io/?utm_source=ossdocs&utm_campaign=five_minute_guide), a fully managed Pact Broker with additional features to simplify teams getting started and scaling with Pact.
+> The Pact Broker is an open source tool that requires you to deploy, administer and host it yourself. If you would prefer a plug-and-play option, we've created [PactFlow](https://pactflow.io/?utm_source=ossdocs&utm_campaign=five_minute_guide), a fully managed Pact Broker with additional features to simplify teams getting started and scaling with Pact.
 >
 > To get started for free, you can sign up to our Developer Plan [here](https://pactflow.io/pricing/?utm_source=ossdocs&utm_campaign=five_minute_guide_dev_plan).
 
 <!-- <iframe style="padding-bottom:20px" frameborder="0" width="100%" height="500px" src="https://repl.it/@mefellows/docspactio-getting-started-publish?lite=true"></iframe> -->
 
-You can see the published pact [here](https://test.pactflow.io/pacts/provider/GettingStartedOrderApi/consumer/GettingStartedOrderWeb/latest). The Pactflow account is protected using basic auth. Use the username `dXfltyFMgNOFZAxr8io9wJ37iUpY42M`, and password `O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1`.
+You can see the published pact [here](https://test.pactflow.io/pacts/provider/GettingStartedOrderApi/consumer/GettingStartedOrderWeb/latest). The PactFlow account is protected using basic auth. Use the username `dXfltyFMgNOFZAxr8io9wJ37iUpY42M`, and password `O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1`.
 
 After publishing the pact, we can now verify that the Provider meets these expectations.
 
