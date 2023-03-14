@@ -5,6 +5,8 @@
 
 Provides runnable code to support the Pact 5 minute getting started guide on our Website [here](https://docs.pact.io/5-minute-getting-started-guide)
 
+If this is useful to you, please :star: the repo and help show your support!
+
 ## Ways to run
 
 > When you've picked an option, click the corresponding button
