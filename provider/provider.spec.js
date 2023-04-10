@@ -18,7 +18,7 @@ describe("Pact Verification", () => {
       provider: providerName,
       // we need to where the provider will be running,
       // we are starting it locally and defined the port above
-      providerBaseUrl: `http://localhost:${port}`,
+      providerBaseUrl: `http://127.0.0.1:${port}`,
       // You can set the log level here, useful for debugging
       logLevel: "info"
     };
