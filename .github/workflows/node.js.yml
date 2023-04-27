@@ -13,8 +13,11 @@ jobs:
   build:
 
     runs-on: ${{ matrix.os }}
-
+    defaults:
+      run:
+        shell: bash
     strategy:
+      fail-fast: false
       matrix:
         node-version: [14,15,16,17,18,19,20]
         os: [ubuntu-latest,macos-latest,windows-latest]
@@ -25,9 +28,4 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm run intro
-    - run: npm run test:consumer
-    - run: npm run pact:show
-    - run: npm run test:provider
-    - run: npm test
-    - run: npm run get:broker
+    - run: ./script/ci/test.sh

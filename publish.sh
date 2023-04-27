@@ -1,3 +1,4 @@
+#!/bin/bash
 GIT_COMMIT=$(git rev-parse HEAD)
 GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 pact-broker publish pacts \
