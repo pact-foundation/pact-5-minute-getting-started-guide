@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/bin/bash -eu
+set -eu # This needs to be here for windows bash, which doesn't read the #! line above
+
 
 node --version
 npm run intro
