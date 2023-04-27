@@ -8,6 +8,8 @@ let port;
 let opts;
 let app;
 
+const hostname = process.arch === 'arm64' && process.platform === 'darwin' ? "127.0.0.1" : "localhost" 
+
 // Verify that the provider meets all consumer expectations
 describe("Pact Verification", () => {
   before(async () => {
@@ -18,7 +20,7 @@ describe("Pact Verification", () => {
       provider: providerName,
       // we need to where the provider will be running,
       // we are starting it locally and defined the port above
-      providerBaseUrl: `http://localhost:${port}`,
+      providerBaseUrl: `http://${hostname}:${port}`,
       // You can set the log level here, useful for debugging
       logLevel: "info"
     };
