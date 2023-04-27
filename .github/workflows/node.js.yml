@@ -28,4 +28,4 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - run: ./script/ci/test.sh
+    - run: ./scripts/ci/test.sh
