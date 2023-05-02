@@ -42,13 +42,6 @@ jobs:
     - run: |
         npm -v
         where node
-        cd C:\\hostedtoolcache\\windows\node\\14.21.3\\x64
+        cd "C:\\Program Files\nodejs\\"
         npm install node-gyp@latest
-      if: matrix.node-version == '14' && runner.os == 'Windows'
-    - run: |
-        npm -v
-        where node
-        cd C:\\hostedtoolcache\\windows\node\\15.14.0\\x64
-        npm install node-gyp@latest
-      if: matrix.node-version == '15' && runner.os == 'Windows'
     - run: ./scripts/ci/test.sh
