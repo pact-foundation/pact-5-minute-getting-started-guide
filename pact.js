@@ -16,7 +16,7 @@ const provider = new Pact({
   logLevel: "info",
   consumer: consumerName,
   provider: providerName,
-  host: "localhost"
+  host: "127.0.0.1"
 });
 
 // used to kill any left over mock server instances in case of errors
