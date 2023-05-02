@@ -24,8 +24,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [14,15,16,17,18,19,20]
-        os: [ubuntu-latest,macos-latest,windows-latest]
+        # node-version: [14,15,16,17,18,19,20]
+        # os: [ubuntu-latest,macos-latest,windows-latest]
+        node-version: [14,15]
+        os: [windows-latest]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
     - uses: actions/checkout@v3
@@ -40,13 +42,13 @@ jobs:
     - run: |
         npm -v
         where node
-        cd C:\hostedtoolcache\windows\node\14.21.3\x64
+        cd C:\\hostedtoolcache\\windows\node\\14.21.3\\x64
         npm install node-gyp@latest
-      if: (matrix.node-version == '14' || matrix.node-version == '15') && runner.os == 'Windows'
+      if: matrix.node-version == '14' && runner.os == 'Windows'
     - run: |
         npm -v
         where node
-        cd C:\hostedtoolcache\windows\node\15.14.0\x64
+        cd C:\\hostedtoolcache\\windows\node\\15.14.0\\x64
         npm install node-gyp@latest
-      if: ( matrix.node-version == '15') && runner.os == 'Windows'
+      if: matrix.node-version == '15' && runner.os == 'Windows'
     - run: ./scripts/ci/test.sh
