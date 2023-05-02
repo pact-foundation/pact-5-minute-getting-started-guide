@@ -20,7 +20,7 @@ linux_arm64_task:
     # https://unix.stackexchange.com/a/743865 workaround for broken 12/15 image updates
     - if [ "$IMAGE" = "node:12-slim" ] ; then  echo "deb http://archive.debian.org/debian stretch main" > /etc/apt/sources.list ; else echo 'not switching to archive'; fi
     - if [ "$IMAGE" = "node:15-slim" ] ; then  echo "deb http://archive.debian.org/debian stretch main" > /etc/apt/sources.list ; else echo 'not switching to archive'; fi
-    - apt update --yes && apt install --yes curl
+    - apt update --yes && apt install --yes curl python
   << : *BUILD_TEST_TASK_TEMPLATE
 
 
@@ -42,13 +42,14 @@ mac_task:
   install nvs_script: |
     git clone https://github.com/jasongin/nvs "$NVS_HOME"
     . "$NVS_HOME/nvs.sh" install
-  install_test_arm64_script: 
-    - rm -rf node_modules
-    - . "$NVS_HOME/nvs.sh"
-    - nvs add $NODE_VERSION
-    - nvs use $NODE_VERSION
-    - file $(which node) | grep -e 'arm64'
-    - node --version
+  install_test_arm64_script: |
+    if [[ $NODE_VERSION != '12' ||$NODE_VERSION != '14' ]] then;
+      . "$NVS_HOME/nvs.sh"
+      nvs add $NODE_VERSION
+      nvs use $NODE_VERSION
+      file $(which node) | grep -e 'arm64'
+      node --version
+    fi
   << : *BUILD_TEST_TASK_TEMPLATE
   install_rosetta_script: softwareupdate --install-rosetta --agree-to-license
   install_test_x64_script: 
