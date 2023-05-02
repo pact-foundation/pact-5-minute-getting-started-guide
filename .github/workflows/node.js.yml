@@ -8,7 +8,6 @@ on:
   push:
     paths:
       - '!.cirrus.yml'
-      - 'rust/**'
   pull_request:
     paths:
       - '!.cirrus.yml'
@@ -37,12 +36,12 @@ jobs:
         npm explore npm/node_modules/@npmcli/run-script -g -- npm_config_global=false npm install node-gyp@latest
       if: matrix.node-version == '15' && runner.os == 'MacOS'
     - run: |
-        npm config set msvs_version 2017
-        npm -v
-        where node
-        cd $(where node)
-        npm install node-gyp@latest
-      # npm install --global node-gyp@latest
-      # npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
-      if: matrix.node-version == '14' || matrix.node-version == '15' && runner.os == 'Windows'
+        npm install --global node-gyp@latest
+        npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
+    # npm config set msvs_version 2017
+    # npm -v
+    # where node
+    # cd C:\hostedtoolcache\windows\node\14.21.3\x64
+    # npm install node-gyp@latest
+      if: (matrix.node-version == '14' || matrix.node-version == '15') && runner.os == 'Windows'
     - run: ./scripts/ci/test.sh

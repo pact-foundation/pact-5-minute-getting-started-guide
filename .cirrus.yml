@@ -6,7 +6,7 @@ BUILD_TEST_TASK_TEMPLATE: &BUILD_TEST_TASK_TEMPLATE
 # as we are packing v2.0.0 of pact-ruby-standalone that supports
 # arm64 linux
 linux_arm64_task:
-  skip: "changesInclude('.github/**')" 
+  skip: "!changesInclude('.github/**')" 
   env:
     matrix:
       - IMAGE: node:12-slim
@@ -27,7 +27,7 @@ linux_arm64_task:
   << : *BUILD_TEST_TASK_TEMPLATE
 
 linux_amd64_task:
-  skip: "changesInclude('.github/**')" 
+  skip: "!changesInclude('.github/**')" 
   env:
     matrix:
       - IMAGE: node:12-slim
@@ -49,7 +49,7 @@ linux_amd64_task:
 
 
 mac_task:
-  skip: "changesInclude('.github/**')" 
+  skip: "!changesInclude('.github/**')" 
   macos_instance:
     image: ghcr.io/cirruslabs/macos-ventura-base:latest
   env:
