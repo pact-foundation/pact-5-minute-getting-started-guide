@@ -24,10 +24,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # node-version: [14,15,16,17,18,19,20]
-        # os: [ubuntu-latest,macos-latest,windows-latest]
-        node-version: [14,15]
-        os: [windows-latest]
+        node-version: [16,17,18,19,20]
+        os: [ubuntu-latest,macos-latest,windows-latest]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
     - uses: actions/checkout@v3
@@ -35,13 +33,13 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - run: | # https://github.com/nodejs/node-gyp/blob/main/docs/Updating-npm-bundled-node-gyp.md
-        npm -v
-        npm explore npm/node_modules/@npmcli/run-script -g -- npm_config_global=false npm install node-gyp@latest
-      if: matrix.node-version == '15' && runner.os == 'MacOS'
-    - run: |
-        npm -v
-        where node
-        cd "C:\\Program Files\nodejs\\"
-        npm install node-gyp@latest
+    # - run: | # https://github.com/nodejs/node-gyp/blob/main/docs/Updating-npm-bundled-node-gyp.md
+    #     npm -v
+    #     npm explore npm/node_modules/@npmcli/run-script -g -- npm_config_global=false npm install node-gyp@latest
+    #   if: matrix.node-version == '15' && runner.os == 'MacOS'
+    # - run: |
+    #     npm -v
+    #     where node
+    #     cd "C:\\Program Files\nodejs\\"
+    #     npm install node-gyp@latest
     - run: ./scripts/ci/test.sh

@@ -9,8 +9,6 @@ BUILD_TEST_TASK_TEMPLATE: &BUILD_TEST_TASK_TEMPLATE
 #   skip: "!changesInclude('.github/**')" 
 #   env:
 #     matrix:
-#       - IMAGE: node:12-slim
-#       - IMAGE: node:14-slim
 #       - IMAGE: node:15-slim
 #       - IMAGE: node:16-slim
 #       - IMAGE: node:17-slim
@@ -20,9 +18,6 @@ BUILD_TEST_TASK_TEMPLATE: &BUILD_TEST_TASK_TEMPLATE
 #   arm_container:
 #     image: $IMAGE
 #   install_script:
-#     # https://unix.stackexchange.com/a/743865 workaround for broken 12/15 image updates
-#     - if [ "$IMAGE" = "node:12-slim" ] ; then  echo "deb http://archive.debian.org/debian stretch main" > /etc/apt/sources.list ; else echo 'not switching to archive'; fi
-#     - if [ "$IMAGE" = "node:15-slim" ] ; then  echo "deb http://archive.debian.org/debian stretch main" > /etc/apt/sources.list ; else echo 'not switching to archive'; fi
 #     - apt update --yes && apt install --yes curl python3 make build-essential g++ jq
 #   << : *BUILD_TEST_TASK_TEMPLATE
 
@@ -30,9 +25,6 @@ linux_amd64_task:
   skip: "!changesInclude('.github/**')" 
   env:
     matrix:
-      - IMAGE: node:12-slim
-      - IMAGE: node:14-slim
-      - IMAGE: node:15-slim
       - IMAGE: node:16-slim
       - IMAGE: node:17-slim
       - IMAGE: node:18-slim
@@ -41,9 +33,6 @@ linux_amd64_task:
   container:
     image: $IMAGE
   install_script:
-    # https://unix.stackexchange.com/a/743865 workaround for broken 12/15 image updates
-    - if [ "$IMAGE" = "node:12-slim" ] ; then  echo "deb http://archive.debian.org/debian stretch main" > /etc/apt/sources.list ; else echo 'not switching to archive'; fi
-    - if [ "$IMAGE" = "node:15-slim" ] ; then  echo "deb http://archive.debian.org/debian stretch main" > /etc/apt/sources.list ; else echo 'not switching to archive'; fi
     - apt update --yes && apt install --yes curl python3 make build-essential g++ jq
   << : *BUILD_TEST_TASK_TEMPLATE
 
@@ -56,9 +45,6 @@ mac_task:
     NVS_HOME: ${HOME}/.nvs
     PATH: ${NVS_HOME}:${PATH}
     matrix:
-      - NODE_VERSION: 12
-      - NODE_VERSION: 14
-      - NODE_VERSION: 15
       - NODE_VERSION: 16
       - NODE_VERSION: 17
       - NODE_VERSION: 18
@@ -68,27 +54,23 @@ mac_task:
     git clone https://github.com/jasongin/nvs "$NVS_HOME"
     . "$NVS_HOME/nvs.sh" install
   install_test_arm64_script: |
-    if [[ $NODE_VERSION != '12' && $NODE_VERSION != '14' && $NODE_VERSION != '15' ]]; then
-      . "$NVS_HOME/nvs.sh"
-      nvs add $NODE_VERSION
-      nvs use $NODE_VERSION
-      file $(which node) | grep -e 'arm64'
-      node --version
-    else
-      echo "skipping arm64 test as node not built for $NODE_VERSION"
-    fi
+    . "$NVS_HOME/nvs.sh"
+    nvs add $NODE_VERSION
+    nvs use $NODE_VERSION
+    file $(which node) | grep -e 'arm64'
+    node --version
   << : *BUILD_TEST_TASK_TEMPLATE
   install_rosetta_script: softwareupdate --install-rosetta --agree-to-license
-  install_test_x64_script: 
-    - rm -rf node_modules
-    - . "$NVS_HOME/nvs.sh"
-    - nvs add $NODE_VERSION/x64
-    - nvs use $NODE_VERSION/x64
-    - file $(which node) | grep -e 'x64'
-    - node --version
-    - arch -x86_64 npm run intro
-    - arch -x86_64 npm run test:consumer
-    - arch -x86_64 npm run pact:show
-    - arch -x86_64 npm run test:provider
-    - arch -x86_64 npm test
-    - arch -x86_64 npm run get:broker
+  install_test_x64_script: | 
+    rm -rf node_modules
+    . "$NVS_HOME/nvs.sh"
+    nvs add $NODE_VERSION/x64
+    nvs use $NODE_VERSION/x64
+    file $(which node) | grep -e 'x64'
+    node --version
+    arch -x86_64 npm run intro
+    arch -x86_64 npm run test:consumer
+    arch -x86_64 npm run pact:show
+    arch -x86_64 npm run test:provider
+    arch -x86_64 npm test
+    arch -x86_64 npm run get:broker
