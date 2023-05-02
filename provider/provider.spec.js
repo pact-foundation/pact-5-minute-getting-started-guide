@@ -8,7 +8,7 @@ let port;
 let opts;
 let app;
 
-const hostname = process.arch === 'arm64' && process.platform === 'darwin' ? "127.0.0.1" : "localhost" 
+const hostname = "127.0.0.1"
 
 // Verify that the provider meets all consumer expectations
 describe("Pact Verification", () => {
