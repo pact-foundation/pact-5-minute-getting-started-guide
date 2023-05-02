@@ -16,6 +16,7 @@ POETRY_CACHE_DIR = "${HOME}/${REPL_SLUG}/.cache/pypoetry"
 XDG_CONFIG_HOME = "/home/runner/.config"
 PATH = "/home/runner/$REPL_SLUG/.config/npm/node_global/bin:/home/runner/$REPL_SLUG/node_modules/.bin:${VIRTUAL_ENV}/lib/python3.8/site-packages:${VIRTUAL_ENV}/bin"
 npm_config_prefix = "/home/runner/$REPL_SLUG/.config/npm/node_global"
+IS_REPL = "true"
 
 [unitTest]
 language = "nodejs"

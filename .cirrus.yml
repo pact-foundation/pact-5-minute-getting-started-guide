@@ -1,0 +1,76 @@
+BUILD_TEST_TASK_TEMPLATE: &BUILD_TEST_TASK_TEMPLATE
+  arch_check_script: uname -am
+  test_script: chmod +x ./scripts/ci/test.sh &&  ./scripts/ci/test.sh
+
+# These are probably expected to fail in the post install script
+# as we are packing v2.0.0 of pact-ruby-standalone that supports
+# arm64 linux
+# linux_arm64_task:
+#   skip: "!changesInclude('.github/**')" 
+#   env:
+#     matrix:
+#       - IMAGE: node:15-slim
+#       - IMAGE: node:16-slim
+#       - IMAGE: node:17-slim
+#       - IMAGE: node:18-slim
+#       - IMAGE: node:19-slim
+#       - IMAGE: node:20-slim
+#   arm_container:
+#     image: $IMAGE
+#   install_script:
+#     - apt update --yes && apt install --yes curl python3 make build-essential g++ jq
+#   << : *BUILD_TEST_TASK_TEMPLATE
+
+linux_amd64_task:
+  skip: "!changesInclude('.github/**')" 
+  env:
+    matrix:
+      - IMAGE: node:16-slim
+      - IMAGE: node:17-slim
+      - IMAGE: node:18-slim
+      - IMAGE: node:19-slim
+      - IMAGE: node:20-slim
+  container:
+    image: $IMAGE
+  install_script:
+    - apt update --yes && apt install --yes curl python3 make build-essential g++ jq
+  << : *BUILD_TEST_TASK_TEMPLATE
+
+
+mac_task:
+  skip: "!changesInclude('.github/**')" 
+  macos_instance:
+    image: ghcr.io/cirruslabs/macos-ventura-base:latest
+  env:
+    NVS_HOME: ${HOME}/.nvs
+    PATH: ${NVS_HOME}:${PATH}
+    matrix:
+      - NODE_VERSION: 16
+      - NODE_VERSION: 17
+      - NODE_VERSION: 18
+      - NODE_VERSION: 19
+      - NODE_VERSION: 20
+  install nvs_script: |
+    git clone https://github.com/jasongin/nvs "$NVS_HOME"
+    . "$NVS_HOME/nvs.sh" install
+  install_test_arm64_script: |
+    . "$NVS_HOME/nvs.sh"
+    nvs add $NODE_VERSION
+    nvs use $NODE_VERSION
+    file $(which node) | grep -e 'arm64'
+    node --version
+  << : *BUILD_TEST_TASK_TEMPLATE
+  install_rosetta_script: softwareupdate --install-rosetta --agree-to-license
+  install_test_x64_script: | 
+    rm -rf node_modules
+    . "$NVS_HOME/nvs.sh"
+    nvs add $NODE_VERSION/x64
+    nvs use $NODE_VERSION/x64
+    file $(which node) | grep -e 'x64'
+    node --version
+    arch -x86_64 npm run intro
+    arch -x86_64 npm run test:consumer
+    arch -x86_64 npm run pact:show
+    arch -x86_64 npm run test:provider
+    arch -x86_64 npm test
+    arch -x86_64 npm run get:broker

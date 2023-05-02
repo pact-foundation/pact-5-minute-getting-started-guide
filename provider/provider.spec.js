@@ -8,6 +8,8 @@ let port;
 let opts;
 let app;
 
+const hostname = "127.0.0.1"
+
 // Verify that the provider meets all consumer expectations
 describe("Pact Verification", () => {
   before(async () => {
@@ -18,7 +20,7 @@ describe("Pact Verification", () => {
       provider: providerName,
       // we need to where the provider will be running,
       // we are starting it locally and defined the port above
-      providerBaseUrl: `http://127.0.0.1:${port}`,
+      providerBaseUrl: `http://${hostname}:${port}`,
       // You can set the log level here, useful for debugging
       logLevel: "info"
     };
