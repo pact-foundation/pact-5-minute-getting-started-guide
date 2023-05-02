@@ -8,7 +8,7 @@ let port;
 let opts;
 let app;
 
-const hostname = "127.0.0.1"
+const hostname = "localhost"
 
 // Verify that the provider meets all consumer expectations
 describe("Pact Verification", () => {
@@ -94,7 +94,7 @@ describe("Pact Verification", () => {
       }
     }
 
-    app = server.listen('3000', '127.0.0.1', () => {
+    app = server.listen('3000', 'localhost', () => {
       console.log(`Provider service listening on http://localhost:${port}`);
     });
   });
