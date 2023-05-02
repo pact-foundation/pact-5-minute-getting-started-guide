@@ -6,9 +6,13 @@ name: Node.js CI
 on:
   workflow_dispatch:
   push:
+    paths:
+      - '!.cirrus.yml'
+      - 'rust/**'
   pull_request:
-    branches: [ "main" ]
-
+    paths:
+      - '!.cirrus.yml'
+  
 jobs:
   build:
 
@@ -28,8 +32,17 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm install -g node-gyp@latest
+    - run: | # https://github.com/nodejs/node-gyp/blob/main/docs/Updating-npm-bundled-node-gyp.md
+        npm -v
+        npm explore npm/node_modules/@npmcli/run-script -g -- npm_config_global=false npm install node-gyp@latest
       if: matrix.node-version == '15' && runner.os == 'MacOS'
-    - run: npm config set msvs_version 2022
+    - run: |
+        npm config set msvs_version 2017
+        npm -v
+        where node
+        cd $(where node)
+        npm install node-gyp@latest
+      # npm install --global node-gyp@latest
+      # npm prefix -g | % {npm config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"}
       if: matrix.node-version == '14' || matrix.node-version == '15' && runner.os == 'Windows'
     - run: ./scripts/ci/test.sh
