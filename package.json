@@ -1,16 +1,10 @@
 {
   "main": "index.js",
   "dependencies": {
-    "@pact-foundation/pact": "10.4.0",
-    "@pact-foundation/pact-node": "^10.17.6",
     "axios": "1.2.1",
     "body-parser": "^1.20.1",
-    "chai": "^4.3.7",
-    "chai-as-promised": "^7.1.1",
     "cors": "^2.8.5",
-    "express": "^4.18.2",
-    "mocha": "^10.2.0",
-    "superagent": "^8.0.6"
+    "express": "^4.18.2"
   },
   "scripts": {
     "intro": "cat package.json | jq .scripts",
@@ -24,6 +18,11 @@
     "get:broker": "echo 'fork a copy of https://replit.com/@pact/pactbroker and run npm test:broker when it has started'"
   },
   "devDependencies": {
-    "cross-env": "^7.0.3"
+    "cross-env": "^7.0.3",
+    "@pact-foundation/pact": "12.1.0",
+    "mocha": "^10.2.0",
+    "superagent": "^8.0.6",
+    "chai": "^4.3.7",
+    "chai-as-promised": "^7.1.1"
   }
 }
