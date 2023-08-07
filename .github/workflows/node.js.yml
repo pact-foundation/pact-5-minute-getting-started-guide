@@ -33,13 +33,4 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    # - run: | # https://github.com/nodejs/node-gyp/blob/main/docs/Updating-npm-bundled-node-gyp.md
-    #     npm -v
-    #     npm explore npm/node_modules/@npmcli/run-script -g -- npm_config_global=false npm install node-gyp@latest
-    #   if: matrix.node-version == '15' && runner.os == 'MacOS'
-    # - run: |
-    #     npm -v
-    #     where node
-    #     cd "C:\\Program Files\nodejs\\"
-    #     npm install node-gyp@latest
     - run: ./scripts/ci/test.sh
