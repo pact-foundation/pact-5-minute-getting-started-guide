@@ -376,4 +376,4 @@ describe("Pact Verification", () => {
 
 #### Run the Provider tests
 
-Let's run the provider test. If you like, click around the project to see the files from above in context. The most interesting file is the consumer test in `./provider/provider.spec.js` .
+Let's run the provider test. If you like, click around the project to see the files from above in context. The most interesting file is the provider test in `./provider/provider.spec.js` .
