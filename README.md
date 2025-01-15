@@ -251,7 +251,7 @@ For this purpose, we are going to use a hosted Pact Broker from pactflow.io.
 
 <!-- <iframe style="padding-bottom:20px" frameborder="0" width="100%" height="500px" src="https://repl.it/@mefellows/docspactio-getting-started-publish?lite=true"></iframe> -->
 
-You can see the published pact [here](https://test.pactflow.io/pacts/provider/GettingStartedOrderApi/consumer/GettingStartedOrderWeb/latest). The PactFlow account is protected using basic auth. Use the username `dXfltyFMgNOFZAxr8io9wJ37iUpY42M`, and password `O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1`.
+You can see the published pact [here](https://test.pactflow.io/pacts/provider/GettingStartedOrderApi/consumer/GettingStartedOrderWeb/latest). Login to the PactFlow account using this [special link](https://test.pactflow.io/login?code=98f7810e-c7dc-493b-9c3d-7849952f1d9a&utm_medium=web&utm_source=5-minute-getting-started-guide).
 
 After publishing the pact, we can now verify that the Provider meets these expectations.
 
@@ -338,8 +338,7 @@ describe("Pact Verification", () => {
       providerBaseUrl: `http://localhost:${port}`,
       // pactUrls: [pactFile], // if you don't use a broker
       pactBrokerUrl: "https://test.pactflow.io",
-      pactBrokerUsername: "dXfltyFMgNOFZAxr8io9wJ37iUpY42M",
-      pactBrokerPassword: "O5AIZWxelWbLvqMd8PkAVycBJh2Psyg1",
+      pactBrokerToken: "129cCdfCWhMzcC9pFwb4bw",
       publishVerificationResult: false,
       providerVersionBranch: process.env.GIT_BRANCH ?? "master",
       providerVersion: process.env.GIT_COMMIT ?? "1.0." + process.env.HOSTNAME,
