@@ -51,7 +51,8 @@
               ]
             }
           },
-          "header": {}
+          "header": {},
+          "status": {}
         },
         "status": 200
       }
@@ -59,11 +60,11 @@
   ],
   "metadata": {
     "pact-js": {
-      "version": "12.1.0"
+      "version": "15.0.1"
     },
     "pactRust": {
-      "ffi": "0.4.7",
-      "models": "1.1.9"
+      "ffi": "0.4.22",
+      "models": "1.2.3"
     },
     "pactSpecification": {
       "version": "3.0.0"

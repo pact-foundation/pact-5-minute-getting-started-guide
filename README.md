@@ -160,18 +160,19 @@ The following code will create a mock service on `localhost:1234` which will res
 
 ```js
 // Setting up our test framework
-const chai = require("chai");
+import * as chai from 'chai';
 const expect = chai.expect;
-const chaiAsPromised = require("chai-as-promised");
+import chaiAsPromised from 'chai-as-promised';
 chai.use(chaiAsPromised);
 
 // We need Pact in order to use it in our test
-const { provider } = require("../pact");
-const { eachLike } = require("@pact-foundation/pact").MatchersV3;
+import { provider } from "../pact.js";
+import { MatchersV3 } from "@pact-foundation/pact";
+const { eachLike } = MatchersV3;
 
 // Importing our system under test (the orderClient) and our Order model
-const { Order } = require("./order"); 
-const { fetchOrders } = require("./orderClient");
+import { Order } from "./order.js";
+import { fetchOrders } from "./orderClient.js";
 
 // This is where we start writing our test
 describe("Pact with Order API", () => {
@@ -251,6 +252,10 @@ For this purpose, we are going to use a hosted Pact Broker from pactflow.io.
 
 <!-- <iframe style="padding-bottom:20px" frameborder="0" width="100%" height="500px" src="https://repl.it/@mefellows/docspactio-getting-started-publish?lite=true"></iframe> -->
 
+We are going to use the [`@pact-foundation/pact-cli`](https://www.npmjs.com/package/@pact-foundation/pact-cli) package to give us access to the [pact-standalone tools](https://github.com/pact-foundation/pact-standalone) which includes the `pact-broker` cli.
+
+Take a look at `./publish.sh` to see how it is used.
+
 You can see the published pact [here](https://test.pactflow.io/pacts/provider/GettingStartedOrderApi/consumer/GettingStartedOrderWeb/latest). Login to the PactFlow account using this [special link](https://test.pactflow.io/login?code=98f7810e-c7dc-493b-9c3d-7849952f1d9a&utm_medium=web&utm_source=5-minute-getting-started-guide).
 
 After publishing the pact, we can now verify that the Provider meets these expectations.
@@ -319,12 +324,12 @@ We now need to perform the "provider verification" task, which involves the foll
 <!-- provider.spec.js -->
 ```js
 // Verify that the provider meets all consumer expectations
-const Verifier = require("@pact-foundation/pact").Verifier;
-const chai = require("chai");
-const chaiAsPromised = require("chai-as-promised");
-const { server } = require("./provider.js");
-const { providerName, pactFile } = require("../pact.js");
+import { Verifier } from "@pact-foundation/pact";
+import * as chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
 chai.use(chaiAsPromised);
+import { server } from "./provider.js";
+import { providerName, pactFile } from "../pact.js";
 let port;
 let opts;
 let app;
