@@ -1,9 +1,9 @@
-const Verifier = require("@pact-foundation/pact").Verifier;
-const chai = require("chai");
-const chaiAsPromised = require("chai-as-promised");
-const { server } = require("./provider.js");
-const { providerName, pactFile } = require("../pact.js");
+import { Verifier } from "@pact-foundation/pact";
+import * as chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
 chai.use(chaiAsPromised);
+import { server } from "./provider.js";
+import { providerName, pactFile } from "../pact.js";
 let port;
 let opts;
 let app;
