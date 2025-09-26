@@ -18,11 +18,12 @@
     "get:broker": "echo 'fork a copy of https://replit.com/@pact/pactbroker and run npm test:broker when it has started'"
   },
   "devDependencies": {
-    "cross-env": "^7.0.3",
     "@pact-foundation/pact": "15.0.1",
-    "mocha": "^11.0.0",
-    "superagent": "^10.0.0",
+    "@pact-foundation/pact-cli": "16.1.4",
     "chai": "^5.0.0",
-    "chai-as-promised": "^7.1.1"
+    "chai-as-promised": "^7.1.1",
+    "cross-env": "^7.0.3",
+    "mocha": "^11.0.0",
+    "superagent": "^10.0.0"
   }
 }
