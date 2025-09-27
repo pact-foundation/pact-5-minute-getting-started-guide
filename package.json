@@ -20,7 +20,7 @@
   "devDependencies": {
     "@pact-foundation/pact": "15.0.1",
     "@pact-foundation/pact-cli": "16.1.4",
-    "chai": "6.0.1",
+    "chai": "6.2.0",
     "chai-as-promised": "8.0.2",
     "cross-env": "10.0.0",
     "mocha": "11.7.2",
