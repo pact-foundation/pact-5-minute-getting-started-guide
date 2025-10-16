@@ -98,27 +98,6 @@ module.exports = {
 };
 ```
 
-<!--Sample Order-->
-
-```js
-module.exports = [
-  {
-    id: 1,
-    items: [
-      {
-        name: "burger",
-        quantity: 2,
-        value: 20,
-      },
-      {
-        name: "coke",
-        quantity: 2,
-        value: 5,
-      },
-    ],
-  },
-];
-```
 <!--END_DOCUSAURUS_CODE_TABS-->
 
 ### 2. Create an Order API client
@@ -308,6 +287,28 @@ module.exports = {
   server,
   dataStore,
 };
+```
+
+<!--Sample Order-->
+
+```js
+module.exports = [
+  {
+    id: 1,
+    items: [
+      {
+        name: "burger",
+        quantity: 2,
+        value: 20,
+      },
+      {
+        name: "coke",
+        quantity: 2,
+        value: 5,
+      },
+    ],
+  },
+];
 ```
 
 <!--END_DOCUSAURUS_CODE_TABS-->
