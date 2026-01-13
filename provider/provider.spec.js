@@ -1,9 +1,9 @@
-import { Verifier } from "@pact-foundation/pact";
-import * as chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
+const { Verifier } = require("@pact-foundation/pact");
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
-import { server } from "./provider.js";
-import { providerName, pactFile } from "../pact.js";
+const { server } = require("./provider.js");
+const { providerName, pactFile } = require("../pact.js");
 let port;
 let opts;
 let app;
@@ -47,7 +47,7 @@ describe("Pact Verification", () => {
         ...opts,
         // we need to know where our broker is located
         pactBrokerUrl: process.env.PACT_BROKER_BASE_URL,
-        // we need specifics about the provider version we are verifying so we 
+        // we need specifics about the provider version we are verifying so we
         // can identify it later
         providerVersion: process.env.GIT_COMMIT,
         providerVersionBranch: process.env.GIT_BRANCH,
@@ -72,8 +72,8 @@ describe("Pact Verification", () => {
       }
 
       // if we have a PACT_URL provided to use by the Pact broker
-      // we do not need to set these options. 
-      // In regular provider builds, these options become relevant to select         
+      // we do not need to set these options.
+      // In regular provider builds, these options become relevant to select
       // your pacts
       if (!process.env.PACT_URL) {
         opts = {
@@ -84,10 +84,10 @@ describe("Pact Verification", () => {
             { mainBranch: true },
             { deployedOrReleased: true }
           ],
-          // Dont allow pending pacts that haven't had a successful 
+          // Dont allow pending pacts that haven't had a successful
           // verification to block provider build
           enablePending: true,
-          // Allow the provider to catch any in-flight work in progress 
+          // Allow the provider to catch any in-flight work in progress
           // pacts from the consumers
           includeWipPactsSince: "2022-01-01"
         }
