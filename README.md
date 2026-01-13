@@ -160,66 +160,67 @@ The following code will create a mock service on `localhost:1234` which will res
 
 ```js
 // Setting up our test framework
-import * as chai from 'chai';
-const expect = chai.expect;
-import chaiAsPromised from 'chai-as-promised';
+const chai = require("chai");
+const chaiAsPromised = require("chai-as-promised");
 chai.use(chaiAsPromised);
+const { expect } = chai;
 
 // We need Pact in order to use it in our test
-import { provider } from "../pact.js";
-import { MatchersV3 } from "@pact-foundation/pact";
+const { provider } = require("../pact");
+const { MatchersV3 } = require("@pact-foundation/pact");
 const { eachLike } = MatchersV3;
 
 // Importing our system under test (the orderClient) and our Order model
-import { Order } from "./order.js";
-import { fetchOrders } from "./orderClient.js";
+const { Order } = require("./order");
+const { fetchOrders } = require("./orderClient");
 
 // This is where we start writing our test
 describe("Pact with Order API", () => {
-  describe("given there are orders", () => {
-    const itemProperties = {
-      name: "burger",
-      quantity: 2,
-      value: 100,
-    };
+	describe("given there are orders", () => {
+		const itemProperties = {
+			name: "burger",
+			quantity: 2,
+			value: 100,
+		};
 
-    const orderProperties = {
-      id: 1,
-      items: eachLike(itemProperties),
-    };
+		const orderProperties = {
+			id: 1,
+			items: eachLike(itemProperties),
+		};
 
-    describe("when a call to the API is made", () => {
-      before(() => {
-        provider
-          .given("there are orders")
-          .uponReceiving("a request for orders")
-          .withRequest({
-            method: "GET",
-            path: "/orders",
-          })
-          .willRespondWith({
-            body: eachLike(orderProperties),
-            status: 200,
-            headers: {
-              "Content-Type": "application/json; charset=utf-8",
-            },
-          });
-      });
+		describe("when a call to the API is made", () => {
+			before(() => {
+				provider
+					.given("there are orders")
+					.uponReceiving("a request for orders")
+					.withRequest({
+						method: "GET",
+						path: "/orders",
+					})
+					.willRespondWith({
+						body: eachLike(orderProperties),
+						status: 200,
+						headers: {
+							"Content-Type": "application/json; charset=utf-8",
+						},
+					});
+			});
 
-      it("will receive the list of current orders", () => {
-        return provider.executeTest((mockserver) => {
-          // The mock server is started on a randomly available port,
-          // so we set the API mock service port so HTTP clients
-          // can dynamically find the endpoint
-          process.env.API_PORT = mockserver.port;
-          return expect(fetchOrders()).to.eventually.have.deep.members([
-            new Order(orderProperties.id, [itemProperties]),
-          ]);
-        });
-      });
-    });
-  });
+			it("will receive the list of current orders", () => {
+				return provider.executeTest((mockserver) => {
+					// The mock server is started on a randomly available port,
+					// so we set the API mock service port so HTTP clients
+					// can dynamically find the endpoint
+					process.env.API_PORT = mockserver.port;
+					return expect(fetchOrders()).to.eventually.have.deep.members([
+						new Order(orderProperties.id, [itemProperties]),
+					]);
+				});
+			});
+		});
+	});
 });
+
 ```
 <!--END_DOCUSAURUS_CODE_TABS-->
 
@@ -323,58 +324,128 @@ We now need to perform the "provider verification" task, which involves the foll
 <!--DOCUSAURUS_CODE_TABS-->
 <!-- provider.spec.js -->
 ```js
-// Verify that the provider meets all consumer expectations
-import { Verifier } from "@pact-foundation/pact";
-import * as chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
+const { Verifier } = require("@pact-foundation/pact");
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
-import { server } from "./provider.js";
-import { providerName, pactFile } from "../pact.js";
+const { server } = require("./provider.js");
+const { providerName, pactFile } = require("../pact.js");
 let port;
 let opts;
 let app;
 
+const hostname = "127.0.0.1"
+
 // Verify that the provider meets all consumer expectations
 describe("Pact Verification", () => {
-  before(async () => {
-    port = 3000;
-    opts = {
-      provider: providerName,
-      providerBaseUrl: `http://localhost:${port}`,
-      // pactUrls: [pactFile], // if you don't use a broker
-      pactBrokerUrl: "https://test.pactflow.io",
-      pactBrokerToken: "129cCdfCWhMzcC9pFwb4bw",
-      publishVerificationResult: false,
-      providerVersionBranch: process.env.GIT_BRANCH ?? "master",
-      providerVersion: process.env.GIT_COMMIT ?? "1.0." + process.env.HOSTNAME,
-      consumerVersionSelectors: [
-        { mainBranch: true },
-        { deployedOrReleased: true }
-      ]
-    };
+	before(async () => {
+		port = 3000;
 
-    app = server.listen(port, () => {
-      console.log(`Provider service listening on http://localhost:${port}`);
-    });
-  });
+		opts = {
+			// we need to know the providers name
+			provider: providerName,
+			// we need to where the provider will be running,
+			// we are starting it locally and defined the port above
+			providerBaseUrl: `http://${hostname}:${port}`,
+			// You can set the log level here, useful for debugging
+			logLevel: "info"
+		};
 
-  after(() => {
-    if (app) {
-      app.close();
-    }
-  });
-  it("should validate the expectations of Order Web", () => {
-    return new Verifier(opts)
-      .verifyProvider()
-      .then((output) => {
-        console.log("Pact Verification Complete!");
-        console.log(output);
-      })
-      .catch((e) => {
-        console.error("Pact verification failed :(", e);
-      });
-  });
+		// The PACT_URL can either be a path to a local file
+		// or one from a Pact Broker
+		if (process.env.PACT_URL) {
+			opts = {
+				...opts,
+				pactUrls: [process.env.PACT_URL]
+			}
+			// as a convenience, we have provided a path to the example consumer/provider pact
+			// generated when running npm run test:consumer
+		} else if (!process.env.PACT_URL && !process.env.PACT_BROKER_BASE_URL) {
+			opts = {
+				...opts,
+				pactUrls: [pactFile]
+			}
+		}
+
+		// If we have a broker, then some more options are relevant
+		if (process.env.PACT_BROKER_BASE_URL) {
+			opts = {
+				...opts,
+				// we need to know where our broker is located
+				pactBrokerUrl: process.env.PACT_BROKER_BASE_URL,
+				// we need specifics about the provider version we are verifying so we
+				// can identify it later
+				providerVersion: process.env.GIT_COMMIT,
+				providerVersionBranch: process.env.GIT_BRANCH,
+				// we only want to publish pacts if we are in CI
+				publishVerificationResult: !!process.env.CI ?? false,
+			}
+
+
+			// we need to setup our broker authentication options
+			// if setup
+			if (process.env.PACT_BROKER_USERNAME) {
+				opts = {
+					...opts,
+					pactBrokerUsername: process.env.PACT_BROKER_USERNAME,
+					pactBrokerPassword: process.env.PACT_BROKER_PASSWORD
+				}
+			} else if (process.env.PACT_BROKER_TOKEN) {
+				opts = {
+					...opts,
+					pactBrokerToken: process.env.PACT_BROKER_TOKEN,
+				}
+			}
+
+			// if we have a PACT_URL provided to use by the Pact broker
+			// we do not need to set these options.
+			// In regular provider builds, these options become relevant to select
+			// your pacts
+			if (!process.env.PACT_URL) {
+				opts = {
+					...opts,
+					// We can use consumer version selectors for fine grained control
+					// over the pacts we retrieve
+					consumerVersionSelectors: [
+						{ mainBranch: true },
+						{ deployedOrReleased: true }
+					],
+					// Dont allow pending pacts that haven't had a successful
+					// verification to block provider build
+					enablePending: true,
+					// Allow the provider to catch any in-flight work in progress
+					// pacts from the consumers
+					includeWipPactsSince: "2022-01-01"
+				}
+			}
+		}
+
+		app = server.listen('3000', '127.0.0.1', () => {
+			console.log(`Provider service listening on http://localhost:${port}`);
+		});
+	});
+
+	after(() => {
+		if (app) {
+			app.close();
+		}
+	});
+
+
+	it("should validate the expectations of Order Web", () => {
+		console.log(opts)
+		return new Verifier(opts)
+			.verifyProvider()
+			.then((output) => {
+				console.log("Pact Verification Complete!");
+				console.log(output);
+			})
+			.catch((e) => {
+				console.error("Pact verification failed :(", e);
+			});
+	});
 });
+
 ```
 <!--END_DOCUSAURUS_CODE_TABS-->
 
