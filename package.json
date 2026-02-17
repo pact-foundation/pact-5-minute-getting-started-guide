@@ -4,7 +4,7 @@
     "axios": "1.12.2",
     "body-parser": "2.2.0",
     "cors": "2.8.5",
-    "express": "5.1.0"
+    "express": "5.2.1"
   },
   "scripts": {
     "intro": "cat package.json | jq .scripts",
