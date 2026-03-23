@@ -167,8 +167,8 @@ const { expect } = chai;
 
 // We need Pact in order to use it in our test
 const { provider } = require("../pact");
-const { MatchersV3 } = require("@pact-foundation/pact");
-const { eachLike } = MatchersV3;
+const { Matchers } = require("@pact-foundation/pact");
+const { eachLike } = Matchers;
 
 // Importing our system under test (the orderClient) and our Order model
 const { Order } = require("./order");
@@ -176,50 +176,40 @@ const { fetchOrders } = require("./orderClient");
 
 // This is where we start writing our test
 describe("Pact with Order API", () => {
-	describe("given there are orders", () => {
-		const itemProperties = {
-			name: "burger",
-			quantity: 2,
-			value: 100,
-		};
+  describe("given there are orders", () => {
+    const itemProperties = {
+      name: "burger",
+      quantity: 2,
+      value: 100,
+    };
 
-		const orderProperties = {
-			id: 1,
-			items: eachLike(itemProperties),
-		};
+    const orderProperties = {
+      id: 1,
+      items: eachLike(itemProperties),
+    };
 
-		describe("when a call to the API is made", () => {
-			before(() => {
-				provider
-					.given("there are orders")
-					.uponReceiving("a request for orders")
-					.withRequest({
-						method: "GET",
-						path: "/orders",
-					})
-					.willRespondWith({
-						body: eachLike(orderProperties),
-						status: 200,
-						headers: {
-							"Content-Type": "application/json; charset=utf-8",
-						},
-					});
-			});
-
-			it("will receive the list of current orders", () => {
-				return provider.executeTest((mockserver) => {
-					// The mock server is started on a randomly available port,
-					// so we set the API mock service port so HTTP clients
-					// can dynamically find the endpoint
-					process.env.API_PORT = mockserver.port;
-					return expect(fetchOrders()).to.eventually.have.deep.members([
-						new Order(orderProperties.id, [itemProperties]),
-					]);
-				});
-			});
-		});
-	});
+    describe("when a call to the API is made", () => {
+      it("will receive the list of current orders", async () => {
+        await provider
+          .addInteraction()
+          .given("there are orders")
+          .uponReceiving("a request for orders")
+          .withRequest("GET", "/orders")
+          .willRespondWith(200, (builder) => {
+            builder.headers({ "Content-Type": "application/json; charset=utf-8" });
+            builder.jsonBody(eachLike(orderProperties));
+          })
+          .executeTest(async (mockserver) => {
+            process.env.API_PORT = mockserver.port;
+            await expect(fetchOrders()).to.eventually.have.deep.members([
+              new Order(orderProperties.id, [itemProperties]),
+            ]);
+          });
+      });
+    });
+  });
 });
+
 
 ```
 <!--END_DOCUSAURUS_CODE_TABS-->
@@ -253,7 +243,7 @@ For this purpose, we are going to use a hosted Pact Broker from pactflow.io.
 
 <!-- <iframe style="padding-bottom:20px" frameborder="0" width="100%" height="500px" src="https://repl.it/@mefellows/docspactio-getting-started-publish?lite=true"></iframe> -->
 
-We are going to use the [`@pact-foundation/pact-cli`](https://www.npmjs.com/package/@pact-foundation/pact-cli) package to give us access to the [pact-standalone tools](https://github.com/pact-foundation/pact-standalone) which includes the `pact-broker` cli.
+We are going to use the [`@pact-foundation/pact-cli`](https://www.npmjs.com/package/@pact-foundation/pact-cli) package to give us access to the [pact-cli tools](https://github.com/pact-foundation/pact-cli) which includes the `pact broker` subcommand.
 
 Take a look at `./publish.sh` to see how it is used.
 
