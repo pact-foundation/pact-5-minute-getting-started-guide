@@ -6,8 +6,8 @@ const { expect } = chai;
 
 // We need Pact in order to use it in our test
 const { provider } = require("../pact");
-const { MatchersV3 } = require("@pact-foundation/pact");
-const { eachLike } = MatchersV3;
+const { Matchers } = require("@pact-foundation/pact");
+const { eachLike } = Matchers;
 
 // Importing our system under test (the orderClient) and our Order model
 const { Order } = require("./order");
@@ -28,33 +28,22 @@ describe("Pact with Order API", () => {
     };
 
     describe("when a call to the API is made", () => {
-      before(() => {
-        provider
+      it("will receive the list of current orders", async () => {
+        await provider
+          .addInteraction()
           .given("there are orders")
           .uponReceiving("a request for orders")
-          .withRequest({
-            method: "GET",
-            path: "/orders",
+          .withRequest("GET", "/orders")
+          .willRespondWith(200, (builder) => {
+            builder.headers({ "Content-Type": "application/json; charset=utf-8" });
+            builder.jsonBody(eachLike(orderProperties));
           })
-          .willRespondWith({
-            body: eachLike(orderProperties),
-            status: 200,
-            headers: {
-              "Content-Type": "application/json; charset=utf-8",
-            },
+          .executeTest(async (mockserver) => {
+            process.env.API_PORT = mockserver.port;
+            await expect(fetchOrders()).to.eventually.have.deep.members([
+              new Order(orderProperties.id, [itemProperties]),
+            ]);
           });
-      });
-
-      it("will receive the list of current orders", () => {
-        return provider.executeTest((mockserver) => {
-          // The mock server is started on a randomly available port,
-          // so we set the API mock service port so HTTP clients
-          // can dynamically find the endpoint
-          process.env.API_PORT = mockserver.port;
-          return expect(fetchOrders()).to.eventually.have.deep.members([
-            new Order(orderProperties.id, [itemProperties]),
-          ]);
-        });
       });
     });
   });

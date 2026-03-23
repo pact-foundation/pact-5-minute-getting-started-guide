@@ -1,7 +1,7 @@
 #!/bin/bash
 GIT_COMMIT=$(git rev-parse HEAD)
 GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-pact-broker publish pacts \
+./node_modules/.bin/pact broker publish pacts \
   --branch $GIT_BRANCH \
   --consumer-app-version $GIT_COMMIT \
   --broker-base-url ${PACT_BROKER_BASE_URL} \
