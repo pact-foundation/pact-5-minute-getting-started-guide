@@ -18,7 +18,7 @@
     "get:broker": "echo 'fork a copy of https://replit.com/@pact/pactbroker and run npm test:broker when it has started'"
   },
   "devDependencies": {
-    "@pact-foundation/pact": "16.3.0",
+    "@pact-foundation/pact": "16.4.0",
     "@pact-foundation/pact-cli": "18.0.0",
     "chai": "^4.3.10",
     "chai-as-promised": "^7.1.1",
