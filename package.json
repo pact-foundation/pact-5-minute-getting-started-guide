@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@pact-foundation/pact": "17.1.1",
-    "@pact-foundation/pact-cli": "18.1.0",
+    "@pact-foundation/pact-cli": "18.1.1",
     "chai": "^4.3.10",
     "chai-as-promised": "^7.1.1",
     "cross-env": "10.1.0",
