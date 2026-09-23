@@ -21,7 +21,7 @@
     "@pact-foundation/pact": "17.1.4",
     "@pact-foundation/pact-cli": "18.1.2",
     "chai": "4.5.0",
-    "chai-as-promised": "7.1.2",
+    "chai-as-promised": "8.0.2",
     "cross-env": "10.1.0",
     "mocha": "11.8.0",
     "superagent": "10.3.0"
